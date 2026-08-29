@@ -1,4 +1,4 @@
-const { execSync } = require('child_process');
+const { execFileSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
@@ -134,13 +134,13 @@ function extractRequirements(filteredPrompt) {
   // In a real SQUAD env, this routes via index.cjs buildCliCommand
   // For the parser, we use a fast model (e.g., claude-3-haiku)
   
-  // Mock LLM call mechanism for SQUAD-Public CLI
-  const taskPart = taskPrompt.replace(/\r/g, '').replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/`/g, '\\`');
-  const cmd = `claude --model fast --output-format text --print "${taskPart}"`;
-  
   try {
-    // Execute LLM with increased 10MB buffer to prevent ENOBUFS
-    const output = execSync(cmd, { 
+    // Execute LLM safely without shell interpolation
+    const output = execFileSync('claude', [
+      '--model', 'fast',
+      '--output-format', 'text',
+      '--print', taskPrompt
+    ], { 
       encoding: 'utf8', 
       stdio: ['pipe', 'pipe', 'ignore'],
       maxBuffer: 1024 * 1024 * 10 
