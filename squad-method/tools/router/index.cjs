@@ -96,8 +96,9 @@ function getEffort(agentId, phase, ctx) {
 function buildCliCommand(model, effort, agentPersona, taskPrompt, budgetUsd) {
   var budget      = budgetUsd || 0.05;
   var fallback    = (model === MODELS.HEAVY) ? MODELS.DEFAULT : MODELS.FAST;
-  var personaPart = (agentPersona || '').replace(/\r/g, '').replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/`/g, '\\`');
-  var taskPart    = (taskPrompt   || '').replace(/\r/g, '').replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/`/g, '\\`');
+  // Bash single-quote safe injection: replace ' with '\''
+  var personaPart = (agentPersona || '').replace(/'/g, "'\\''");
+  var taskPart    = (taskPrompt   || '').replace(/'/g, "'\\''");
   return 'claude'
     + ' --model '          + model
     + ' --effort '         + effort
@@ -105,7 +106,7 @@ function buildCliCommand(model, effort, agentPersona, taskPrompt, budgetUsd) {
     + ' --max-budget-usd ' + budget
     + ' --no-session-persistence'
     + ' --output-format text'
-    + ' --print "' + personaPart + '\\n\\n' + taskPart + '"';
+    + " --print '" + personaPart + "\n\n" + taskPart + "'";
 }
 
 function formatRoutingLog(agentId, phase, model, effort, reason, path) {
@@ -176,7 +177,7 @@ function buildDispatchCommand(ideId, agentId, phase, taskPrompt, ctx) {
     case 'codex':
       var effortFlag = resolved.supports_effort ? ' --reasoning-effort ' + resolved.effort : '';
       return {
-        command: 'codex --model ' + resolved.model + effortFlag + ' --print "' + taskPrompt.replace(/"/g, '\\"') + '"',
+        command: 'codex --model ' + resolved.model + effortFlag + " --print '" + taskPrompt.replace(/'/g, "'\\''") + "'",
         model: resolved.model,
         provider: resolved.provider,
       };

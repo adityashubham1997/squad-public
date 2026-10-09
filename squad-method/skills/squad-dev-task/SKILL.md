@@ -130,8 +130,13 @@ Parse `$ARGUMENTS`:
 **Tracker Mode:**
 Use tracker MCP tools if available to fetch story details, AC, linked items.
 
-**Description Mode:**
-Nova structures into testable AC (GIVEN/WHEN/THEN).
+**Description Mode (Agentic Requirement Queue):**
+You act as the Interactive Queue Manager. Do NOT parse the prompt yourself.
+1. Execute the parser on the raw prompt: `node squad-method/tools/parser/prompt-parser.cjs "[YOUR_PROMPT_HERE]"`
+2. Present the parsed JSON to the user in this chat UI, clearly showing the `actionable`, `uninterpreted`, and `junk` tags.
+3. Pause and ask the user: "Review this queue. Reply Y to proceed, or tell me if you want to override any tags (e.g. 'rescue item 2 from junk')."
+4. If the user overrides tags, manually update the JSON in your context.
+5. Once approved, use the `actionable` queue items as your strict AC for Phase 2.
 
 ### 1c. Architecture Impact (Atlas)
 

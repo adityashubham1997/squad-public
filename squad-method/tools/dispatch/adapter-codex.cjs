@@ -111,7 +111,7 @@ CodexAdapter.prototype._buildCliCommand = function(task) {
   parts.push('--print');
 
   // The prompt
-  parts.push('"' + this._buildAgentPrompt(task).replace(/"/g, '\\"') + '"');
+  parts.push("'" + this._buildAgentPrompt(task).replace(/'/g, "'\\''") + "'");
 
   return parts.join(' ');
 };

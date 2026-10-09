@@ -287,7 +287,7 @@ test('buildDispatchCommand for Codex returns codex CLI', function() {
 
 test('buildDispatchCommand for Gemini returns curl', function() {
   var result = router.buildDispatchCommand('gemini', 'oracle', 'phase_1', 'research');
-  assert.ok(result.command.includes('generativelanguage.googleapis.com'));
+  assert.ok(/generativelanguage\.googleapis\.com/.test(result.command));
   assert.strictEqual(result.provider, 'google');
 });
 

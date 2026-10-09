@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Requirement List",
+  "type": "object",
+  "properties": {
+    "requirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "raw_text_quote": {
+            "type": "string",
+            "description": "The exact substring from the filtered prompt this requirement maps to."
+          },
+          "fragment_type": {
+            "type": "string",
+            "enum": ["actionable", "uninterpreted", "junk"],
+            "description": "Set to 'actionable' if the requirement is specific enough to execute. Set to 'uninterpreted' if it is too vague or ambiguous. Set to 'junk' if it is conversational noise."
+          },
+          "interpreted_action": {
+            "type": "string",
+            "description": "If actionable, state the technical action to take. If uninterpreted, explain what is ambiguous."
+          }
+        },
+        "required": ["raw_text_quote", "fragment_type", "interpreted_action"]
+      }
+    }
+  },
+  "required": ["requirements"]
+}

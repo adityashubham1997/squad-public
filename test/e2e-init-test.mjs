@@ -5,7 +5,7 @@
 import { mkdtempSync, mkdirSync, writeFileSync, existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { execSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
 
@@ -37,7 +37,7 @@ writeFileSync(join(ws, 'Dockerfile'), 'FROM node:20\n');
 console.log(`Workspace: ${ws}`);
 console.log('Running: squad-public init --ide claude,windsurf\n');
 
-const output = execSync(`node ${CLI} init --ide claude,windsurf`, {
+const output = execFileSync(process.execPath, [CLI, 'init', '--ide', 'claude,windsurf'], {
   cwd: ws,
   encoding: 'utf8',
   timeout: 15000,
